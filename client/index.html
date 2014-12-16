@@ -1,0 +1,251 @@
+<head>
+  <title>Karmic Attorney Tool Engine</title>
+</head>
+
+<body>
+<div id="wrapper" class="container-fluid">
+	{{> hello}}
+</div>
+</body>
+
+<template name="hello">
+{{#if currentUser}}
+	{{> splash}}
+{{else}} {{#if loggingIn}}
+	<h1>Welcome to KARmic Attorney Tool Engine!</h1>
+	<p>Please wait while we log you in ...</p>
+{{else}}
+	<h1>Welcome to KARmic Attorney Tool Engine!</h1>
+	<p>Please log-in to reddit below:</p>
+	{{> loginButtons}}
+{{/if}}{{/if}}
+</template>
+
+<template name="splash">
+	<div class="row" role="tabpanel">
+		{{> channels}}
+		{{> screen}}
+	</div>
+</template>
+
+<template name="channels">
+	<nav id="nav" class="col-md-3">
+		<ul class="nav nav-pills nav-stacked" role="tablist">
+			<li role="presentation" class="active">
+				<a href="#summary" role="tab" data-toggle="pill">
+					<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+					Summary
+				</a>
+			</li>
+			<li role="presentation">
+				<a href="#add-new-case" role="tab" data-toggle="pill">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					Add a new case
+				</a>
+			</li>
+			<li role="presentation">
+				<a href="#tools" role="tab" data-toggle="pill">
+					<span class="glyphicon glyphicon-wrench"></span>
+					Tools
+				</a>
+			</li>
+			<li role="presentation">
+				<a href="#settings" role="tab" data-toggle="pill">
+					<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+					Settings
+				</a>
+			</li>
+			<li role="presentation">
+				<a href="#about" role="tab" data-toggle="pill">
+					<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+					About
+				</a>
+			</li>
+			<li class="nav-divider"></li>
+			{{> loginButtons}}
+			{{> magicButton}}
+			<li class="nav-divider"></li>
+			{{> statusUpdates}}
+		</ul>
+	</nav>
+</template>
+
+<template name="screen">
+	<div id="screen" class="col-md-9">
+		<div class="tab-content">
+			<div id="summary" role="tabpanel" class="tab-pane active">{{> summary}}</div>
+			<div id="add-new-case" role="tabpanel" class="tab-pane">{{> addNewCase}}</div>
+			<div id="tools" role="tabpanel" class="tab-pane">{{> tools}}</div>
+			<div id="settings" role="tabpanel" class="tab-pane">{{> settings}}</div>
+			<div id="about" role="tabpanel" class="tab-pane">{{> about}}</div>
+		</div>
+	</div>
+</template>
+
+<template name="summary">
+	<h2>Summary</h2>
+	{{> currentCases}}
+	{{> oldCases}}
+	{{> statistics}}
+</template>
+
+<template name="currentCases">
+	<h3 id="current-cases">Current cases</h3>
+	{{#each cases}}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-link"></span>
+					<a href="{{shortLink}}" target="_blank">{{title}}</a>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<form role="form" class="form-horizontal">
+					<fieldset {{disabled}}>
+						<div class="form-group">
+							<label for="role-{{_id}}" class="control-label col-xs-1">Role:</label>
+							<div class="col-xs-3">
+								<select id="role-{{_id}}" class="form-control">
+									{{#each roleOptions}}
+										<option value="{{value}}" {{selected}}>{{value}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="status-{{_id}}" class="control-label col-xs-1">Status:</label>
+							<div class="col-xs-3">
+								<select id="status-{{_id}}" class="form-control">
+									{{#each statusOptions}}
+										<option value="{{value}}" {{selected}}>{{value}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				<button class="btn btn-danger remove-case" type="button">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Remove case
+				</button>
+				<button class="btn btn-info edit-case" type="button">
+					<span class="glyphicon glyphicon-pencil"></span>
+					{{editText}}
+				</button>				
+			</div>
+		</div>
+	{{/each}}
+</template>
+
+<template name="oldCases">
+	<h3 id="old-cases">Old Cases</h3>
+	{{#each cases}}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-link"></span>
+					<a href="{{shortLink}}" target="_blank">{{title}}</a>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<p>
+					<strong>Role:</strong> {{role}}
+				</p>
+				<p>
+					<strong>Result:</strong> {{status}}
+				</p>
+				<button class="btn btn-danger remove-case" type="button">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Remove case
+				</button>
+			</div>
+		</div>
+	{{/each}}
+</template>
+
+<template name="statistics">
+	<h3 id="statistics">Statistics</h3>
+		<p><strong>Total cases:</strong> {{totalCases}}, with {{incompleted}} in session or pre-trial</p>
+		<p><strong>Wins:</strong> {{wins}}</p>
+		<p><strong>Losses:</strong> {{losses}}</p>
+		<p><strong>Non-completion probability:</strong> {{NCP}}</p>
+</template>
+
+<template name="addNewCase">
+	<h4>Add a new case</h4>
+	<form role="form" class="form-horizontal">
+		<div class="form-group">
+			<label for="case-link" class="control-label col-xs-2">Case link</label>
+			<div class="col-xs-10">
+				<input type="text" class="form-control" id="case-link">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-2">Role</label>
+			<div class="col-xs-10">
+				{{#each roles}}
+					<div class="radio">
+						<label>
+							<input type="radio" name="roles" id="roles-{{role}}" value="{{role}}"> {{role}}
+						</label>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-2">Status</label>
+			<div class="col-xs-10">
+				{{#each statuses}}
+					<div class="radio">
+						<label>
+							<input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+						</label>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+		<button class="btn btn-default" type="submit">Submit</button>
+		<button class="post-to-firm btn-post-to-firm btn btn-info hidden">Post link to firm</button>
+		<button class="post-to-firm-cancel btn-post-to-firm btn btn-danger hidden">Cancel</button>
+	</form>
+</template>
+
+<template name="tools">
+	<h3>Tools</h3>
+	<p>Redective: <input type="text" class="form-control"></p>
+</template>
+
+<template name="settings">
+	<h3>Settings</h3>
+		<form role="form" class="form-horizontal">
+			<fieldset>
+				<div class="form-group">
+					<label for="firm" class="control-label col-xs-1">Firm:</label>
+					<div class="col-xs-6">
+						<input type="text" class="form-control" id="firm" aria-describedby="firm-help" value="{{firm}}">
+						<span id="firm-help" class="help-block">Post your firm's subreddit name, e.g. "BiasedLawPLLC"</span>
+					</div>
+				</div>
+				<button class="btn btn-default" type="submit">Save</button>
+			</fieldset>
+		</form>
+</template>
+
+<template name="about">
+	<h3>About</h3>
+
+	<h4>Credits</h4>
+	<p>Built on and hosted by <a href="http://www.meteor.com">Meteor</a></p>
+	<p>Icons by <a href="http://glyphicons.com/">glyphicons</a></p>
+</template>
+
+<template name="statusUpdates">
+	<div id="statusUpdates">
+	</div>
+</template>
+
+<template name="magicButton">
+	<div>
+		<button id="magicButton" class="btn btn-danger">Magic button</button>
+	</div>
+</template>
