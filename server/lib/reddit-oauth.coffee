@@ -66,6 +66,7 @@ class @Reddit extends @RedditOAuth
 
                 r = u.services.reddit
                 super(r.accessToken, r.refreshToken, r.expiresIn)
+                @needsCaptchaError = error: "Please authenticate your email on reddit"
 
         _getApiItem: (endpt, params = {}) ->
 
@@ -105,32 +106,56 @@ class @Reddit extends @RedditOAuth
 
         needsCaptcha: -> @_getApiItem('/api/needs_captcha.json').data
 
-        getNewArticles: ->
+        canPostToSr: (sr) -> @_getApiItem("/r/#{sr}/about.json")
 
-                params =
-                        limit: 50
-                        show: 'all'
-                @_getApiItem('/r/Thimoteus/new', params)
+        isUsername: (usr) -> @_getApiItem("/user/#{usr}/about.json")
+
+        getKCNum: (id) ->
+
+                d = new Date(@getArticleCreationDate(id))
+
+                return "#{d.getFullYear().toString()[2..]}KCC-#{d.getMonth()+1}-#{id}"
+
+        postLinkToSr: (sr, title, url) ->
+
+                data =
+                        api_type: 'json'
+                        kind: 'link'
+                        sr: sr
+                        title: title
+                        url: url
+                        resubmit: true
+                        extension: 'json'
+                        then: 'comments'
+
+                return @needsCaptchaError if @needsCaptcha()
+                return @_postToApi('/api/submit', data)
 
         submitCaseLink: (kase, sr) ->
 
                 id = kase.number
                 title = @getArticleTitle(id)
-                d = new Date(@getArticleCreationDate(id))
-                KCnum = "#{d.getFullYear().toString()[2..]}KCC-#{d.getMonth()+1}-#{id}"
+                KCnum = @getKCNum(id)
 
-                data = 
+                return @postLinkToSr(sr, title, "http://redd.it/#{id}")
+
+        sendPM: (recipient, title, msg) ->
+
+                data =
                         api_type: 'json'
-                        kind: 'link'
-                        sr: sr
-                        title: "#{KCnum}, #{kase.role}: #{title}"
-                        url: "http://redd.it/#{id}"
-                        resubmit: true
-                        extension: 'json'
-                        then: 'comments'
-
-
-                if @needsCaptcha()
-                        return {error: "Please authenticate your email on reddit"}
+                        subject: title
+                        text: msg
+                        to: recipient
                 
-                return @_postToApi('/api/submit', data)
+                return @needsCaptchaError if @needsCaptcha()
+                return @_postToApi('/api/compose', data)
+
+        replyToArticle: (recipient, msg) ->
+
+                data =
+                        api_type: 'json'
+                        text: msg
+                        parent: "t3_" + getArticleSrAndId(Meteor.user().profile.settings.recipient)[1]
+
+                return @needsCaptchaError if @needsCaptcha()
+                return @_postToApi('/api/comment', data)

@@ -1,0 +1,1 @@
+The **Kar**ma **A**ttorney **T**ool **E**ngine is a tool developed by [/u/Thimoteus](https://www.reddit.com/user/Thimoteus) to help [KarmaCourt](https://www.reddit.com/r/KarmaCourt) attorneys keep track of their cases.
