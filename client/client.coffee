@@ -264,6 +264,12 @@ Template.splash.rendered = ->
         $(".ncp-tooltip").tooltip
                 title: "Chances that one of your cases will be end in mistrial or dismissal"
 
+Template.addNewCase.rendered = ->
+        $("[type='submit']").tooltip
+                title: "Add a case to the KARATE database."
+        $("[.btn-post-to-firm").tooltip
+                title: "Post to your firm's subreddit with a link to the trial on KC."
+
 
 Template.addNewCase.helpers
 
