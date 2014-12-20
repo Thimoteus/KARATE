@@ -21,14 +21,14 @@ EventDuplicates =
 
 newCaseInfo = (cxt) ->
 
-        addr = cxt.$("#case-link")[0].value
+        addr = cxt.$("#case-link")[0]?.value
         checked = cxt.$("input[type='radio']:checked")
         info = getArticleSrAndId(addr)
         ret =
                 number: info[1]
                 sr: info[0]
-                role: checked[0].value
-                status: checked[1].value
+                role: checked[0]?.value
+                status: checked[1]?.value
 
         return ret
 
@@ -103,12 +103,12 @@ Template.addNewCase.events
                 Meteor.call("postToFirm", kase, (e, r) ->
 
                         if r.error
-
                                 newStatusMessage(r.error, "warning")
                                 return
-
-                        if not e
-
+                        if e
+                                newStatusMessage("Something went wrong, try again later", "danger")
+                                return
+                        else
                                 newStatusMessage("Link posted", "success")
                                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                                 cxt.$(".btn-post-to-firm").addClass("hidden"))
@@ -122,7 +122,7 @@ Template.addNewCase.events
                 
                 Meteor.call("submitNewCase", kase, (err, res) ->
                 
-                        if err or not res
+                        if err
                                 
                                 newStatusMessage("Something went wrong, try again later", "danger")
 
@@ -267,9 +267,15 @@ Template.splash.rendered = ->
 Template.addNewCase.rendered = ->
         $("[type='submit']").tooltip
                 title: "Add a case to the KARATE database."
-        $("[.btn-post-to-firm").tooltip
+        $(".post-to-firm").tooltip
                 title: "Post to your firm's subreddit with a link to the trial on KC."
 
+Template.settings.rendered = ->
+        UM = @$("[type='radio']:checked")[0].value
+        if UM is "None"
+                Session.set("disabledRecipient", "disabled")
+        else
+                Session.set("disabledRecipient", "")
 
 Template.addNewCase.helpers
 
@@ -357,12 +363,7 @@ Template.settings.helpers
 
         recipient: -> Meteor.user().profile?.settings?.recipient ? ""
 
-        recipientDisabled: -> 
-                
-                if Meteor.user().profile?.settings?.updateMethod is "None"
-                        return "disabled"
-                
-                return Session.get("disabledRecipient") or ""
+        recipientDisabled: -> return Session.get("disabledRecipient")
 
 Template.magicButton.events
 

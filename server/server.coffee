@@ -1,5 +1,6 @@
 # for validations
 val =
+        exists: Match.Where (x) -> x?
         isProperString: Match.Where (str) ->
                 check(str, String)
                 str.length > 0
@@ -80,9 +81,16 @@ Meteor.methods
                         return false
 
         "postToFirm": (kase) ->
-
-                firm = Meteor.user().profile.settings.firm
+                check(kase.role, val.isTrialRole)
+                check(kase.status, val.isTrialStatus)
+                
+                kase.sr = reddit.getShortLinkSr(kase.number) unless kase.sr
+                firm = Meteor.user().profile.settings?.firm
+                
+                return {error: "You need to set a firm."} unless firm?
+                
                 res = reddit.submitCaseLink(kase, firm)
+                
                 return res
 
         "editCase": (kase) ->
@@ -91,9 +99,8 @@ Meteor.methods
 
                 try
                         id = kase.id
-                        o =
-                                'role': kase.role
-                                'status': kase.status
+                        console.log kase
+                        o = _.pick(kase, ['role', 'status'])
 
                         Cases.update(id, {$set: o})
 
@@ -103,7 +110,6 @@ Meteor.methods
                         console.log err.response
 
                         return false
-
 
         "deleteCase": (id) ->
 
@@ -134,12 +140,8 @@ Meteor.methods
                 """
 
                 switch userSettings.updateMethod
-                        when "PM"
-                                check(recipient, val.isUsername)
-                                return reddit.sendPM(recipient, title, msg)
-                        when "Reply"
-                                check(recipient, val.isPost)
-                                return reddit.replyToArticle(recipient, msg)
+                        when "PM" then return reddit.sendPM(recipient, title, msg)
+                        when "Reply" then return reddit.replyToArticle(recipient, msg)
 
         "updateSettings": (settings) ->
                 check(settings.firm, val.isSr) if settings.firm.length > 0
@@ -177,5 +179,5 @@ Meteor.methods
 
         "magicButton": (args...) ->
                 
-                Meteor.users.remove('WYmCYDgx8xpxB9WGx')
-                console.log Meteor.users.find().count()
+                res = reddit.getShortLinkInfo(args[0])
+                console.log res

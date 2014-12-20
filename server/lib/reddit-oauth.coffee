@@ -82,27 +82,29 @@ class @Reddit extends @RedditOAuth
 
                 return @post(url, opts)
 
-        getArticle: (id) ->
+        _getArticle: (id, sr = null) ->
 
                 if not this[id]?
 
+                        sr = @getShortLinkSr(id) unless sr?
                         this[id] =
-                                article: @_getApiItem("/r/karmacourt/comments/#{id}.json")
+                                article: @_getApiItem("/r/#{sr}/comments/#{id}.json")
                                 expires: Date.now()+1000*3600
                 
                 else if this[id].expires <= Date.now()
 
+                        sr = @getShortLinkSr(id) unless sr?
                         this[id] =
-                                article: @_getApiItem("/r/karmacourt/comments/#{id}.json")
+                                article: @_getApiItem("/r/#{sr}/comments/#{id}.json")
                                 expires: Date.now()+1000*3600
                 
                 return this[id].article
 
-        getArticleJson: (id) -> @getArticle(id).data[0].data.children[0].data
+        _getArticleJson: (id) -> @_getArticle(id).data[0].data.children[0].data
 
-        getArticleTitle: (id) -> @getArticleJson(id).title
+        getArticleTitle: (id) -> @_getArticleJson(id).title
 
-        getArticleCreationDate: (id) -> @getArticleJson(id).created*1000
+        getArticleCreationDate: (id) -> @_getArticleJson(id).created*1000
 
         needsCaptcha: -> @_getApiItem('/api/needs_captcha.json').data
 
@@ -159,3 +161,9 @@ class @Reddit extends @RedditOAuth
 
                 return @needsCaptchaError if @needsCaptcha()
                 return @_postToApi('/api/comment', data)
+
+        _getShortLinkInfo: (id) -> return @_getApiItem("/by_id/t3_#{id}")
+
+        _getShortLinkJson: (id) -> return @_getShortLinkInfo(id).data.data.children[0].data
+
+        getShortLinkSr: (id) -> return @_getShortLinkJson(id).subreddit
