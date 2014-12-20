@@ -24,6 +24,7 @@ newCaseInfo = (cxt) ->
         addr = cxt.$("#case-link")[0]?.value
         checked = cxt.$("input[type='radio']:checked")
         info = getArticleSrAndId(addr)
+        return unless info
         ret =
                 number: info[1]
                 sr: info[0]
@@ -99,6 +100,7 @@ Template.addNewCase.events
                 newStatusMessage("Posting new link ... ", "info")
 
                 kase = newCaseInfo(cxt)
+                return newStatusMessage("Your link looks wrong", "warning") unless kase
 
                 Meteor.call("postToFirm", kase, (e, r) ->
 
@@ -117,6 +119,7 @@ Template.addNewCase.events
                 evt.preventDefault()
 
                 kase = newCaseInfo(cxt)
+                return newStatusMessage("Not all fields were filled correctly", "warning") unless kase
                 
                 newStatusMessage("Submitting new case ... ", "info")
                 
