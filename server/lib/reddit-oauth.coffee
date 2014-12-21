@@ -136,8 +136,8 @@ class @Reddit extends @RedditOAuth
         submitCaseLink: (kase, sr) ->
 
                 id = kase.number
-                title = @getArticleTitle(id)
                 KCnum = @getKCNum(id)
+                title = KCnum + ", " + kase.role + ": " + @getArticleTitle(id)
 
                 return @postLinkToSr(sr, title, "http://redd.it/#{id}")
 
