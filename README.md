@@ -18,10 +18,11 @@ Dependencies:
 Impovements:
 
 1. Added case number and role to links posted to the firm.
+2. Automatically tries to set case flair to links submitted to a user's firm.
 
-Bugfixes:
+<!-- Bugfixes: -->
 
-1. 
+<!-- 1.  -->
 
 0.1.1
 
