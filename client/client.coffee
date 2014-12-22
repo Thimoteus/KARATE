@@ -130,9 +130,11 @@ Template.addNewCase.events
 
                         else
 
-                                Message.success("Case saved")
-                                cxt.$("button[type='submit']").attr("disabled", true).addClass("hidden")
-                                cxt.$(".btn-post-to-firm").removeClass("hidden"))
+                                if Meteor.user().profile?.settings?.firm?.length > 0
+                                        cxt.$("button[type='submit']").attr("disabled", true).addClass("hidden")
+                                        cxt.$(".btn-post-to-firm").removeClass("hidden")
+                                
+                                Message.success("Case saved"))
 
 Template.currentCases.events
 
@@ -274,7 +276,7 @@ Template.splash.rendered = ->
         @$(".wins-tooltip").tooltip
                 title: "Prosecution wins: plea bargains, guilty verdicts. Defense: dismissals, not guilty verdicts."
         @$(".ncp-tooltip").tooltip
-                title: "Chances that one of your cases will be end in mistrial or dismissal"
+                title: "Chances that one of your cases will be end in mistrial, dismissal or a plea bargain."
 
 Template.addNewCase.rendered = ->
         @$("[type='submit']").tooltip
@@ -294,6 +296,33 @@ Template.addNewCase.helpers
         roles: -> {"role": role} for role in roles
 
         statuses: -> {"status": status, "statusEdited": if status is "pre-trial" then "pre-trial" else status.replace("-", " ")} for status in statuses
+
+        trialStatuses: -> [{
+                        status: "pre-trial",
+                        statusEdited: "pre-trial"
+                },{
+                        status: "in-session",
+                        statusEdited: "in session"
+                }]
+
+        verdictStatuses: -> [{
+                        status: "guilty",
+                        statusEdited: "guilty"
+                },{
+                        status: "not-guilty",
+                        statusEdited: "not guilty"
+                }]
+
+        ncStatuses: -> [{
+                        status: "dismissed",
+                        statusEdited: "dismissed"
+                },{
+                        status: "mistrial",
+                        statusEdited: "mistrial"
+                },{
+                        status: "plea-bargain",
+                        statusEdited: "plea bargain"
+                }]
 
 Template.currentCases.helpers
 
@@ -346,7 +375,7 @@ Template.statistics.helpers
                         return (Math.floor(x*10000)/100).toString() + "%"
                 
                 closedCases = Cases.find(status: {$in: statuses[2..]}).count()
-                NCPCases = Cases.find(status: {$in: statuses[4..5]}).count()
+                NCPCases = Cases.find(status: {$in: statuses[4..6]}).count()
                 NCP = NCPCases/closedCases
 
                 return format(NCPCases/closedCases.valueOf())

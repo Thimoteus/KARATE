@@ -201,7 +201,23 @@
                 <div class="form-group">
                         <label class="control-label col-xs-2">Status</label>
                         <div class="col-xs-10">
-                                {{#each statuses}}
+                                {{#each trialStatuses}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                                <hr>
+                                {{#each verdictStatuses}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                                <hr>
+                                {{#each ncStatuses}}
                                         <div class="radio">
                                                 <label>
                                                         <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}

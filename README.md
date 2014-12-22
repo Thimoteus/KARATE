@@ -19,10 +19,11 @@ Impovements:
 
 1. Added case number and role to links posted to the firm.
 2. Automatically tries to set case flair to links submitted to a user's firm. You will need to log out and log back in to KARATE for this to work.
+3. Added "bailiff" and "executioner" as roles.
 
-<!-- Bugfixes: -->
+Bugfixes:
 
-<!-- 1.  -->
+1. Users without a firm will now not have the "post to firm" button appear when submitting a new case.
 
 0.1.1
 
