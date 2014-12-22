@@ -1,5 +1,17 @@
 The **Kar**ma **A**ttorney **T**ool **E**ngine is a tool developed by [/u/Thimoteus](https://www.reddit.com/user/Thimoteus) to help [KarmaCourt](https://www.reddit.com/r/KarmaCourt) attorneys keep track of their cases.
 
+Dependencies: 
+
+1. accounts-base
+2. accounts-oauth
+3. accounts-reddit
+4. accounts-ui
+5. coffeescript
+6. less
+7. meteor-platform
+8. mizzao:bootstrap-3
+9. service-configuration
+
 ######changelog
 0.1.2
 

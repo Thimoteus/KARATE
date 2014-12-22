@@ -12,12 +12,12 @@ EventDuplicates =
                 
                 Meteor.call("postUpdateToReddit", role, status, number, (e, r) ->
                                 if e
-                                        return newStatusMessage("Check the recipient in your settings exists") if checkFailedValidation(e)
-                                        return newStatusMessage("Something went wrong", "danger")
+                                        return Message.warning("Check the recipient in your settings exists") if checkFailedValidation(e)
+                                        Message.error("Something went wrong")
                                 else if r.error
-                                        newStatusMessage(r.error, "warning")
+                                        Message.warning(r.error)
                                 else
-                                        newStatusMessage("Update sent to reddit", "success"))
+                                        Message.success("Update sent to reddit"))
 
 newCaseInfo = (cxt) ->
 
@@ -61,21 +61,22 @@ preSelectOptions = (array, selector) ->
         
         return opts
 
-newStatusMessage = (msg, type) ->
-
-        t = type
-        t = "Error" if type is "danger"
-
-        statusMsg= """
-                <div class='alert alert-#{type} alert-dismissible' role='alert'>
-                        <button type='button' class='close' data-dismiss='alert'>
-                                <span aria-hidden='true'>&times;</span>
-                                <span class='sr-only'>Close</span>
-                        </button>
-                        <strong>#{t[0].toUpperCase()+t[1..]}:</strong> #{msg}
-                </div>
-        """
-        $("#statusUpdates").prepend(statusMsg)
+Message =
+        msg: (msg, type) ->
+                t = if type is "danger" then "Error" else type
+                statusMsg = """
+                        <div class='alert alert-#{type} alert-dismissible' role='alert'>
+                                <button type='button' class='close' data-dismiss='alert'>
+                                        <span aria-hidden='true'>&times;</span>
+                                        <span class='sr-only'>Close</span>
+                                </button>
+                                <strong>#{t[0].toUpperCase()+t[1..]}:</strong> #{msg}
+                        </div>"""
+                $("#statusUpdates").prepend(statusMsg)
+        warning: (msg) -> Message.msg(msg, "warning")
+        error: (msg) -> Message.msg(msg, "danger")
+        info: (msg) -> Message.msg(msg, "info")
+        success: (msg) -> Message.msg(msg, "success")
 
 ###
                         __      
@@ -97,21 +98,19 @@ Template.addNewCase.events
         'click .post-to-firm': (evt, cxt) -> 
                 evt.preventDefault()
 
-                newStatusMessage("Posting new link ... ", "info")
+                Message.info("Posting new link ... ")
 
                 kase = newCaseInfo(cxt)
-                return newStatusMessage("Your link looks wrong", "warning") unless kase
+                return Message.warning("Your link looks wrong") unless kase
 
                 Meteor.call("postToFirm", kase, (e, r) ->
 
                         if r.error
-                                newStatusMessage(r.error, "warning")
-                                return
+                                return Message.warning(r.error)
                         if e
-                                newStatusMessage("Something went wrong, try again later", "danger")
-                                return
+                                return Message.erro("Something went wrong")
                         else
-                                newStatusMessage("Link posted", "success")
+                                Message.success("Link posted")
                                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                                 cxt.$(".btn-post-to-firm").addClass("hidden"))
         
@@ -119,19 +118,19 @@ Template.addNewCase.events
                 evt.preventDefault()
 
                 kase = newCaseInfo(cxt)
-                return newStatusMessage("Not all fields were filled correctly", "warning") unless kase
+                return Message.warning("Not all fields were filled correctly") unless kase
                 
-                newStatusMessage("Submitting new case ... ", "info")
+                Message.info("Submitting new case ... ")
                 
                 Meteor.call("submitNewCase", kase, (err, res) ->
                 
                         if err
                                 
-                                newStatusMessage("Something went wrong, try again later", "danger")
+                                return Message.error("Something went wrong, try again later")
 
                         else
 
-                                newStatusMessage("Case submitted!", "success")
+                                Message.success("Case saved")
                                 cxt.$("button[type='submit']").attr("disabled", true).addClass("hidden")
                                 cxt.$(".btn-post-to-firm").removeClass("hidden"))
 
@@ -142,7 +141,12 @@ Template.currentCases.events
 
                 id = @_id
 
-                Meteor.call("deleteCase", id, (e, r) -> newStatusMessage("Case removed", "success") if not e)
+                Meteor.call("deleteCase", id, (e, r) ->
+                        
+                        if not e
+                                return Message.success("Case removed")
+                        else
+                                return Message.error("Something went wrong"))
 
         'click .edit-case': (evt, cxt) ->
 
@@ -159,13 +163,14 @@ Template.currentCases.events
                 me = this
 
                 Meteor.call("editCase", kase, (err, res) ->
+                                
                                 if err
                                 
-                                        newStatusMessage("Something went wrong", "danger")
+                                        return Message.error("Something went wrong")
                                 
                                 else
                                 
-                                        newStatusMessage("Changes saved", "success")
+                                        Message.success("Changes saved")
                                         cxt.$(".editing").removeClass("editing").addClass("edit-case")
                                         Session.set("editing-#{me._id}", false))
 
@@ -174,7 +179,7 @@ Template.currentCases.events
                 role = cxt.$("#role-#{@_id} option:selected")[0].value
                 status = cxt.$("#status-#{@_id} option:selected")[0].value
 
-                newStatusMessage("Updating on reddit ... ", "info")
+                Message.info("Sending update message to reddit ... ")
 
                 EventDuplicates.postUpdateToReddit(role, status, @number)
 
@@ -183,7 +188,7 @@ Template.oldCases.events
 
         'click .update-case': (evt, cxt) ->
 
-                newStatusMessage("Updating on reddit ... ", "info")
+                Message.info("Sending update message to reddit ... ")
 
                 EventDuplicates.postUpdateToReddit(@role, @status, @number)
 
@@ -192,7 +197,11 @@ Template.oldCases.events
 
                 id = @_id
 
-                Meteor.call("deleteCase", id, (e, r) -> newStatusMessage("Case removed", "success") if not e)
+                Meteor.call("deleteCase", id, (e, r) ->
+                        if not e
+                                Message.success("Case removed")
+                        else
+                                Message.error("Something went wrong"))
 
 Template.settings.events
         
@@ -208,18 +217,18 @@ Template.settings.events
                         updateMethod: cxt.$("input[name='update-methods']:checked")[0]?.value
                         recipient: cxt.$("#recipient")[0].value
 
-                newStatusMessage("Updating settings ... ", "info")
+                        Message.info("Updating settings ... ")
 
                 Meteor.call("updateSettings", settings, (e, r) ->
                         
                         if not e
                         
-                                newStatusMessage("Settings saved", "success")
+                                Message.success("Settings saved")
                         
                         else
 
-                                return newStatusMessage("Check the firm and recipient exist.", "danger") if checkFailedValidation(e)
-                                newStatusMessage(e.message, "danger"))
+                                return Message.error("Check the firm and recipient exist") if checkFailedValidation(e)
+                                Message.error("Something went wrong"))
 
 Template.tools.events
 
