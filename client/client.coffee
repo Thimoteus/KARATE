@@ -217,7 +217,7 @@ Template.settings.events
                         updateMethod: cxt.$("input[name='update-methods']:checked")[0]?.value
                         recipient: cxt.$("#recipient")[0].value
 
-                        Message.info("Updating settings ... ")
+                Message.info("Updating settings ... ")
 
                 Meteor.call("updateSettings", settings, (e, r) ->
                         

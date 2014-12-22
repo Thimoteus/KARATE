@@ -90,9 +90,14 @@ Meteor.methods
                 return {error: "You need to set a firm."} unless firm?
                 
                 res = reddit.submitCaseLink(kase, firm)
-                
-                return res
 
+                try
+                        postId = res.data.json.data.id
+                        reddit.setFlairOption(postId)
+                        return res
+                catch e
+                        return res
+                
         "editCase": (kase) ->
                 check(kase.role, val.isTrialRole)
                 check(kase.status, val.isTrialStatus)
@@ -179,5 +184,5 @@ Meteor.methods
 
         "magicButton": (args...) ->
                 
-                res = reddit.getShortLinkInfo(args[0])
+                res = reddit.setFlairOption(args[0])
                 console.log res

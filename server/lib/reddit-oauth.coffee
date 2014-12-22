@@ -167,3 +167,28 @@ class @Reddit extends @RedditOAuth
         _getShortLinkJson: (id) -> return @_getShortLinkInfo(id).data.data.children[0].data
 
         getShortLinkSr: (id) -> return @_getShortLinkJson(id).subreddit
+
+        _getFlairOptionsForPost: (id) ->
+
+                sr = @getShortLinkSr(id)
+                data =
+                        link: "t3_#{id}"
+                
+                return @_postToApi("/r/#{sr}/api/flairselector", data)
+
+        setFlairOption: (id, flair = /case/i) ->
+
+                flairOptions = @_getFlairOptionsForPost(id).data.choices
+
+                for opt in flairOptions
+                        flairTemplateId = opt.flair_template_id if flair.test(opt.flair_text)
+
+                return false unless flairTemplateId
+
+                sr = @getShortLinkSr(id)
+                data =
+                        api_type: 'json'
+                        link: "t3_#{id}"
+                        flair_template_id: flairTemplateId
+
+                return @_postToApi("/r/#{sr}/api/selectflair", data)
