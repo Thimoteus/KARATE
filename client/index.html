@@ -4,22 +4,19 @@
 
 <body>
         <div id="wrapper" class="container-fluid">
-                {{> hello}}
+                {{#if currentUser}}
+                        {{> splash}}
+                {{else}} {{#if loggingIn}}
+                        <h1>Welcome to KARmic Attorney Tool Engine!</h1>
+                        <p>Please wait while we log you in ...</p>
+                        <img src="http://i.imgur.com/hW8uDm8.gif" alt="loading">
+                {{else}}
+                        <h1>Welcome to KARmic Attorney Tool Engine!</h1>
+                        <p>Please log-in to reddit below:</p>
+                        {{> loginButtons}}
+                {{/if}}{{/if}}
         </div>
 </body>
-
-<template name="hello">
-        {{#if currentUser}}
-                {{> splash}}
-        {{else}} {{#if loggingIn}}
-                <h1>Welcome to KARmic Attorney Tool Engine!</h1>
-                <p>Please wait while we log you in ...</p>
-        {{else}}
-                <h1>Welcome to KARmic Attorney Tool Engine!</h1>
-                <p>Please log-in to reddit below:</p>
-                {{> loginButtons}}
-        {{/if}}{{/if}}
-</template>
 
 <template name="splash">
         <div class="row" role="tabpanel">
