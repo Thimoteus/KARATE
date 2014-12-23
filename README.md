@@ -1,3 +1,5 @@
+Current version: 0.1.2
+
 The **Kar**ma **A**ttorney **T**ool **E**ngine is a tool developed by [/u/Thimoteus](https://www.reddit.com/user/Thimoteus) to help [KarmaCourt](https://www.reddit.com/r/KarmaCourt) attorneys keep track of their cases.
 
 Dependencies: 
@@ -24,6 +26,7 @@ Impovements:
 Bugfixes:
 
 1. Users without a firm will now not have the "post to firm" button appear when submitting a new case.
+2. Updating to reddit is now disabled while editing a case.
 
 0.1.1
 

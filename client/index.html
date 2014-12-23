@@ -135,6 +135,12 @@
                                                                 </select>
                                                         </div>
                                                 </div>
+                                                <div class="form-group">
+                                                        <label for="notes-{{_id}}" class="control-label col-xs-1">Notes:</label>
+                                                        <div class="col-xs-6">
+                                                                <textarea class="form-control" rows="3" id="notes-{{_id}}">{{notes}}</textarea>
+                                                        </div>
+                                                </div>
                                         </fieldset>
                                 </form>
                                 <button class="btn btn-danger remove-case" type="button">
@@ -145,7 +151,9 @@
                                         <span class="glyphicon glyphicon-pencil"></span>
                                         {{editText}}
                                 </button>
-                                {{> updateOnReddit}}
+                                {{#if updateable}}
+                                        {{> updateOnReddit}}
+                                {{/if}}
                         </div>
                 </div>
         {{/each}}
@@ -167,6 +175,9 @@
                                 </p>
                                 <p>
                                         <strong>Result:</strong> {{status}}
+                                </p>
+                                <p>
+                                        <strong>Notes:</strong> {{notes}}
                                 </p>
                                 <button class="btn btn-danger remove-case" type="button">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -224,6 +235,12 @@
                                                 </label>
                                         </div>
                                 {{/each}}
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label for="notes" class="control-label col-xs-2">Notes</label>
+                        <div class="col-xs-10">
+                                <textarea class="form-control" rows="3" id="notes"></textarea>
                         </div>
                 </div>
                 <button class="btn btn-default" type="submit">Submit</button>

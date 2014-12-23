@@ -8,9 +8,9 @@ checkFailedValidation = (e) -> /Match failed \[400\]/.test e.message
 
 EventDuplicates =
         
-        postUpdateToReddit: (role, status, number) ->
+        postUpdateToReddit: (kase) ->
                 
-                Meteor.call("postUpdateToReddit", role, status, number, (e, r) ->
+                Meteor.call("postUpdateToReddit", kase, (e, r) ->
                                 if e
                                         return Message.warning("Check the recipient in your settings exists") if checkFailedValidation(e)
                                         Message.error("Something went wrong")
@@ -23,6 +23,7 @@ newCaseInfo = (cxt) ->
 
         addr = cxt.$("#case-link")[0]?.value
         checked = cxt.$("input[type='radio']:checked")
+        notes = cxt.$("#notes")[0].value
         info = getArticleSrAndId(addr)
         return unless info
         ret =
@@ -30,6 +31,7 @@ newCaseInfo = (cxt) ->
                 sr: info[0]
                 role: checked[0]?.value
                 status: checked[1]?.value
+                notes: notes
 
         return ret
 
@@ -161,6 +163,7 @@ Template.currentCases.events
                         id: @_id
                         role: cxt.$("#role-#{@_id} option:selected")[0].value.replace(" ", "-")
                         status: cxt.$("#status-#{@_id} option:selected")[0].value.replace(" ", "-")
+                        notes: cxt.$("#notes-#{@_id}")[0].value
 
                 me = this
 
@@ -172,7 +175,7 @@ Template.currentCases.events
                                 
                                 else
                                 
-                                        Message.success("Changes saved")
+                                        Message.success("Case saved")
                                         cxt.$(".editing").removeClass("editing").addClass("edit-case")
                                         Session.set("editing-#{me._id}", false))
 
@@ -180,10 +183,17 @@ Template.currentCases.events
 
                 role = cxt.$("#role-#{@_id} option:selected")[0].value
                 status = cxt.$("#status-#{@_id} option:selected")[0].value
+                notes = cxt.$("#notes-#{@_id}")[0].value
+
+                kase =
+                        id: @number
+                        role: role
+                        status: status
+                        notes: notes
 
                 Message.info("Sending update message to reddit ... ")
 
-                EventDuplicates.postUpdateToReddit(role, status, @number)
+                EventDuplicates.postUpdateToReddit(kase)
 
 
 Template.oldCases.events
@@ -192,7 +202,13 @@ Template.oldCases.events
 
                 Message.info("Sending update message to reddit ... ")
 
-                EventDuplicates.postUpdateToReddit(@role, @status, @number)
+                kase =
+                        id: @number
+                        role: @role
+                        status: @status
+                        notes: @notes
+
+                EventDuplicates.postUpdateToReddit(kase)
 
         'click .remove-case': (evt, cxt) ->
                 evt.preventDefault()
@@ -334,6 +350,7 @@ Template.currentCases.helpers
         editText: -> return if Session.get("editing-#{@_id}") then "Save changes" else "Edit case"
 
         disabled: -> return if Session.get("editing-#{@_id}") then "" else "disabled"
+        updateable: -> return if Session.get("editing-#{@_id}") then false else true
 
         roleOptions: -> preSelectOptions(roles, @role)
 

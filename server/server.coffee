@@ -70,6 +70,7 @@ Meteor.methods
                                 'number': kase.number
                                 'role': kase.role
                                 'status': kase.status
+                                'notes': kase.notes
                         
                         return true
 
@@ -104,10 +105,11 @@ Meteor.methods
 
                 try
                         id = kase.id
-                        console.log kase
-                        o = _.pick(kase, ['role', 'status'])
+                        o = _.pick(kase, ['role', 'status', 'notes'])
 
                         Cases.update(id, {$set: o})
+
+                        return true
 
                 catch err
 
@@ -130,19 +132,20 @@ Meteor.methods
 
                         return false
 
-        "postUpdateToReddit": (role, status, id) ->
+        "postUpdateToReddit": (kase) ->
 
-                KCnum = reddit.getKCNum(id)
+                KCnum = reddit.getKCNum(kase.id)
                 userSettings = Meteor.user().profile.settings
                 recipient = userSettings.recipient
                 title = "Update for case no. #{KCnum}"
                 msg = """
                         KarmaCourt case no. #{KCnum} has been updated.
                         
-                        My role is `#{role}`.
+                        My role is `#{kase.role}`.
                         
-                        The case's status is `#{status}`.
+                        The case's status is `#{kase.status}`.
                 """
+                msg += "\n\nNotes: #{kase.notes}" if kase.notes.length > 0
 
                 switch userSettings.updateMethod
                         when "PM" then return reddit.sendPM(recipient, title, msg)
