@@ -1,4 +1,4 @@
-@roles = ["judge","jury","prosecution","defense","bailiff","executioner"]
+@roles = ["judge","jury","prosecution","defense","bailiff","executioner","reporter"]
 @statuses = ["pre-trial","in-session","guilty","not-guilty","dismissed","mistrial", "plea-bargain"]
 
 @getArticleSrAndId = (url) ->
@@ -8,7 +8,7 @@
         re2 = /redd\.it\/(\w{6})/
         # http://www.reddit.com/tb/2phq1j
         re3 = /reddit.com\/tb\/(\w{6})/
-        
+
         if re1.test url
                 return re1.exec(url)[1..2]
         if re2.test url

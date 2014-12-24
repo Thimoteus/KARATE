@@ -1,9 +1,9 @@
 ###
-#     ___ __  
-#    / (_) /_ 
+#     ___ __
+#    / (_) /_
 #   / / / __ \
 #  / / / /_/ /
-# /_/_/_.___/ 
+# /_/_/_.___/
 ###
 
 newCaseInfo = (cxt) ->
@@ -22,12 +22,21 @@ newCaseInfo = (cxt) ->
 
         return ret
 
+formatStatuses = (n, m) ->
+        o = []
+        for status in statuses[n..m]
+                o.push {
+                        status: status
+                        statusEdited: if status is "pre-trial" then "pre-trial" else status.replace("-", " ")
+                }
+        return o
+
 ###
-#                         __      
+#                         __
 #   ___ _   _____  ____  / /______
 #  / _ \ | / / _ \/ __ \/ __/ ___/
-# /  __/ |/ /  __/ / / / /_(__  ) 
-# \___/|___/\___/_/ /_/\__/____/  
+# /  __/ |/ /  __/ / / / /_(__  )
+# \___/|___/\___/_/ /_/\__/____/
 ###
 
 Template.addNewCase.events
@@ -38,7 +47,7 @@ Template.addNewCase.events
                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                 cxt.$(".btn-post-to-firm").addClass("hidden")
 
-        'click .post-to-firm': (evt, cxt) -> 
+        'click .post-to-firm': (evt, cxt) ->
                 evt.preventDefault()
 
                 Message.info("Posting new link ... ")
@@ -56,19 +65,19 @@ Template.addNewCase.events
                                 Message.success("Link posted")
                                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                                 cxt.$(".btn-post-to-firm").addClass("hidden"))
-        
+
         'submit form': (evt, cxt) ->
                 evt.preventDefault()
 
                 kase = newCaseInfo(cxt)
                 return Message.warning("Not all fields were filled correctly") unless kase
-                
+
                 Message.info("Submitting new case ... ")
-                
+
                 Meteor.call("submitNewCase", kase, (err, res) ->
-                
+
                         if err
-                                
+
                                 return Message.error("Something went wrong, try again later")
 
                         else
@@ -78,53 +87,30 @@ Template.addNewCase.events
                                         cxt.$(".btn-post-to-firm").removeClass("hidden")
                                 Message.success("Case saved"))
 ###
-#     __         __                    
+#     __         __
 #    / /_  ___  / /___  ___  __________
 #   / __ \/ _ \/ / __ \/ _ \/ ___/ ___/
-#  / / / /  __/ / /_/ /  __/ /  (__  ) 
-# /_/ /_/\___/_/ .___/\___/_/  /____/  
-#             /_/                      
+#  / / / /  __/ / /_/ /  __/ /  (__  )
+# /_/ /_/\___/_/ .___/\___/_/  /____/
+#             /_/
 ###
 
 Template.addNewCase.helpers
 
         roles: -> {"role": role} for role in roles
 
-        statuses: -> {"status": status, "statusEdited": if status is "pre-trial" then "pre-trial" else status.replace("-", " ")} for status in statuses
+        trialStatuses: -> formatStatuses(0,1)
 
-        trialStatuses: -> [{
-                        status: "pre-trial",
-                        statusEdited: "pre-trial"
-                },{
-                        status: "in-session",
-                        statusEdited: "in session"
-                }]
+        verdictStatuses: -> formatStatuses(2,3)
 
-        verdictStatuses: -> [{
-                        status: "guilty",
-                        statusEdited: "guilty"
-                },{
-                        status: "not-guilty",
-                        statusEdited: "not guilty"
-                }]
-
-        ncStatuses: -> [{
-                        status: "dismissed",
-                        statusEdited: "dismissed"
-                },{
-                        status: "mistrial",
-                        statusEdited: "mistrial"
-                },{
-                        status: "plea-bargain",
-                        statusEdited: "plea bargain"
-                }]
+        ncStatuses: -> formatStatuses(4,6)
 
 ###
 #                         __                   __
 #    ________  ____  ____/ /__  ________  ____/ /
-#   / ___/ _ \/ __ \/ __  / _ \/ ___/ _ \/ __  / 
-#  / /  /  __/ / / / /_/ /  __/ /  /  __/ /_/ /  
-# /_/   \___/_/ /_/\__,_/\___/_/   \___/\__,_/   
+#   / ___/ _ \/ __ \/ __  / _ \/ ___/ _ \/ __  /
+#  / /  /  __/ / / / /_/ /  __/ /  /  __/ /_/ /
+# /_/   \___/_/ /_/\__,_/\___/_/   \___/\__,_/
 ###
 
 Template.addNewCase.rendered = ->

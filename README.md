@@ -1,8 +1,8 @@
-Current version: 0.1.2
+Current version: 0.2.0
 
 The **Kar**ma **A**ttorney **T**ool **E**ngine is a tool developed by [/u/Thimoteus](https://www.reddit.com/user/Thimoteus) to help [KarmaCourt](https://www.reddit.com/r/KarmaCourt) attorneys keep track of their cases.
 
-Dependencies: 
+Dependencies:
 
 1. accounts-base
 2. accounts-oauth
@@ -15,6 +15,14 @@ Dependencies:
 9. service-configuration
 
 ######changelog
+0.2.0
+
+Improvements:
+
+1. Restructured the whole thing
+2. Added "reporter" as a new role
+3. Can now add and edit notes for individual cases
+
 0.1.2
 
 Impovements:
