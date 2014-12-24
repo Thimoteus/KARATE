@@ -1,0 +1,95 @@
+<head>
+        <title>KARATE</title>
+</head>
+
+<body>
+        <div id="wrapper" class="container-fluid">
+                {{#if currentUser}}
+                        {{> splash}}
+                {{else}} {{#if loggingIn}}
+                        <h1>Welcome to KARmic Attorney Tool Engine!</h1>
+                        <p>Please wait while we log you in ...</p>
+                        <img src="http://i.imgur.com/hW8uDm8.gif" alt="loading">
+                {{else}}
+                        <h1>Welcome to KARmic Attorney Tool Engine!</h1>
+                        <p>Please log-in to reddit below:</p>
+                        {{> loginButtons}}
+                {{/if}}{{/if}}
+        </div>
+</body>
+
+<template name="splash">
+        <div class="row" role="tabpanel">
+                {{> channels}}
+                {{> screen}}
+        </div>
+</template>
+
+<template name="channels">
+        <nav id="nav" class="col-md-3">
+                <ul class="nav nav-pills nav-stacked" role="tablist">
+                        <li role="presentation" class="active">
+                                <a href="#summary" role="tab" data-toggle="pill">
+                                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                                        Summary
+                                </a>
+                        </li>
+                        <li role="presentation">
+                                <a href="#add-new-case" role="tab" data-toggle="pill">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Add a new case
+                                </a>
+                        </li>
+                        <li role="presentation">
+                                <a href="#tools" role="tab" data-toggle="pill">
+                                        <span class="glyphicon glyphicon-wrench"></span>
+                                        Tools
+                                </a>
+                        </li>
+                        <li role="presentation">
+                                <a href="#settings" role="tab" data-toggle="pill">
+                                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                        Settings
+                                </a>
+                        </li>
+                        <li role="presentation">
+                                <a href="#about" role="tab" data-toggle="pill">
+                                        <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                                        About
+                                </a>
+                        </li>
+                        <li class="nav-divider"></li>
+                        {{> loginButtons}}
+
+                        <!-- <li class="nav-divider"></li>
+                        {{> magicButton}} -->
+
+                        <li class="nav-divider"></li>
+                        {{> statusUpdates}}
+                </ul>
+        </nav>
+</template>
+
+<template name="screen">
+        <div id="screen" class="col-md-9">
+                <div class="tab-content">
+                        <div id="summary" role="tabpanel" class="tab-pane active">{{> summary}}</div>
+                        <div id="add-new-case" role="tabpanel" class="tab-pane">{{> addNewCase}}</div>
+                        <div id="tools" role="tabpanel" class="tab-pane">{{> tools}}</div>
+                        <div id="settings" role="tabpanel" class="tab-pane">{{> settings}}</div>
+                        <div id="about" role="tabpanel" class="tab-pane">{{> about}}</div>
+                </div>
+        </div>
+</template>
+
+<template name="statusUpdates">
+        <div id="statusUpdates">
+        </div>
+</template>
+
+<template name="magicButton">
+        <div>
+                <input type="text" id="magicText">
+                <button id="magicButton" class="btn btn-danger">Magic button</button>
+        </div>
+</template>
