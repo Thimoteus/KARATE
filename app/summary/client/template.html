@@ -1,0 +1,113 @@
+<template name="summary">
+        <div class="page-header">
+                <h2>Summary <small><a href="#statistics">Statistics</a> | <a href="#current-cases">Current Cases</a> | <a href="#old-cases">Old Cases</a></small></h2>
+        </div>
+        {{> statistics}}
+        {{> currentCases}}
+        {{> oldCases}}
+</template>
+
+
+<template name="statistics">
+        <h3 id="statistics">Statistics</h3>
+                <p><strong>Total cases:</strong> {{totalCases}}, with {{incompleted}} in session or pre-trial</p>
+                <p><strong class="wins-tooltip">Wins:</strong> {{wins}}</p>
+                <p><strong>Losses:</strong> {{losses}}</p>
+                <p><strong class="ncp-tooltip">Non-completion probability:</strong> {{NCP}}</p>
+</template>
+
+<template name="currentCases">
+        <h3 id="current-cases">Current cases</h3>
+        {{#each cases}}
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                                <h3 class="panel-title">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                        <a href="{{shortLink}}" target="_blank">{{title}}</a>
+                                </h3>
+                        </div>
+                        <div class="panel-body">
+                                <form role="form" class="form-horizontal">
+                                        <fieldset {{disabled}}>
+                                                <div class="form-group">
+                                                        <label for="role-{{_id}}" class="control-label col-xs-1">Role:</label>
+                                                        <div class="col-xs-3">
+                                                                <select id="role-{{_id}}" class="form-control">
+                                                                        {{#each roleOptions}}
+                                                                                <option value="{{value}}" {{selected}}>{{value}}</option>
+                                                                        {{/each}}
+                                                                </select>
+                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <label for="status-{{_id}}" class="control-label col-xs-1">Status:</label>
+                                                        <div class="col-xs-3">
+                                                                <select id="status-{{_id}}" class="form-control">
+                                                                        {{#each statusOptions}}
+                                                                                <option value="{{value}}" {{selected}}>{{value}}</option>
+                                                                        {{/each}}
+                                                                </select>
+                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <label for="notes-{{_id}}" class="control-label col-xs-1">Notes:</label>
+                                                        <div class="col-xs-6">
+                                                                <textarea class="form-control" rows="3" id="notes-{{_id}}">{{notes}}</textarea>
+                                                        </div>
+                                                </div>
+                                        </fieldset>
+                                </form>
+                                <button class="btn btn-danger remove-case" type="button">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        Remove case
+                                </button>
+                                <button class="btn btn-info edit-case" type="button">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                        {{editText}}
+                                </button>
+                                {{#if updateable}}
+                                        {{> updateOnReddit}}
+                                {{/if}}
+                        </div>
+                </div>
+        {{/each}}
+</template>
+
+<template name="oldCases">
+        <h3 id="old-cases">Old Cases</h3>
+        {{#each cases}}
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                                <h3 class="panel-title">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                        <a href="{{shortLink}}" target="_blank">{{title}}</a>
+                                </h3>
+                        </div>
+                        <div class="panel-body">
+                                <p>
+                                        <strong>Role:</strong> {{role}}
+                                </p>
+                                <p>
+                                        <strong>Result:</strong> {{status}}
+                                </p>
+                                <p>
+                                        <strong>Notes:</strong> {{notes}}
+                                </p>
+                                <button class="btn btn-danger remove-case" type="button">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        Remove case
+                                </button>
+                                {{> updateOnReddit}}
+                        </div>
+                </div>
+        {{/each}}
+</template>
+
+<template name="updateOnReddit">
+        {{#if canUpdateCaseOnReddit}}
+        <button class="btn btn-info update-case">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Update on reddit
+        </button>
+        {{/if}}
+</template>

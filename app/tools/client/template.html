@@ -1,0 +1,79 @@
+<template name="tools">
+        <form role="form" class="form-horizontal" id="tools-username">
+                <legend>User search</legend>
+                <fieldset>
+                        <div class="form-group">
+                                <label class="control-label col-xs-2">Search</label>
+                                <div class="col-xs-6">
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-username" value="redective" checked> redective
+                                                </label>
+                                        </div>
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-username" value="rcs"> redditcommentsearch
+                                                </label>
+                                        </div>
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-username" value="metareddit"> metareddit
+                                                </label>
+                                        </div>
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-username" value="reddit"> reddit
+                                                </label>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label for="search-username" class="control-label col-xs-2">for</label>
+                                <div class="col-xs-6">
+                                        <div class="input-group">
+                                                <input type="text" class="form-control" id="search-username" placeholder="username">
+                                                <div class="input-group-btn">
+                                                        <button class="btn btn-default" type="submit">Search</button>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </fieldset>
+        </form>
+        <form role="form" class="form-horizontal" id="tools-image">
+                <legend>Reverse image search</legend>
+                <fieldset>
+                        <div class="form-group">
+                                <label class="control-label col-xs-2">Search</label>
+                                <div class="col-xs-6">
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-image" value="karmadecay" checked> karma decay
+                                                </label>
+                                        </div>
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-image" value="tineye"> tineye
+                                                </label>
+                                        </div>
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="search-image" value="google"> google
+                                                </label>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label class="control-label col-xs-2" for="search-image">for</label>
+                                <div class="col-xs-6">
+                                        <div class="input-group">
+                                                <input type="text" class="form-control" id="search-image" placeholder="image url">
+                                                <div class="input-group-btn">
+                                                        <button class="btn btn-default" type="submit">Search</button>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </fieldset>
+        </form>
+</template>

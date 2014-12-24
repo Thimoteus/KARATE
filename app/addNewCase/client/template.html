@@ -1,0 +1,60 @@
+
+<template name="addNewCase">
+        <form role="form" class="form-horizontal">
+                <div class="form-group">
+                        <label for="case-link" class="control-label col-xs-2">Case link</label>
+                        <div class="col-xs-10">
+                                <input type="text" class="form-control" id="case-link">
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label class="control-label col-xs-2">Role</label>
+                        <div class="col-xs-10">
+                                {{#each roles}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="roles" id="roles-{{role}}" value="{{role}}"> {{role}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label class="control-label col-xs-2">Status</label>
+                        <div class="col-xs-10">
+                                {{#each trialStatuses}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                                <hr>
+                                {{#each verdictStatuses}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                                <hr>
+                                {{#each ncStatuses}}
+                                        <div class="radio">
+                                                <label>
+                                                        <input type="radio" name="statuses" id="status-{{status}}" value="{{status}}"> {{statusEdited}}
+                                                </label>
+                                        </div>
+                                {{/each}}
+                        </div>
+                </div>
+                <div class="form-group">
+                        <label for="notes" class="control-label col-xs-2">Notes</label>
+                        <div class="col-xs-10">
+                                <textarea class="form-control" rows="3" id="notes"></textarea>
+                        </div>
+                </div>
+                <button class="btn btn-default" type="submit">Submit</button>
+                <button class="post-to-firm btn-post-to-firm btn btn-info hidden">Post link to firm</button>
+                <button class="post-to-firm-cancel btn-post-to-firm btn btn-danger hidden">Cancel</button>
+        </form>
+</template>

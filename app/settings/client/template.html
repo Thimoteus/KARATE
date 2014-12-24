@@ -1,0 +1,35 @@
+
+<template name="settings">
+        <form role="form" class="form-horizontal">
+                <fieldset>
+                        <div class="form-group">
+                                <label for="firm" class="control-label col-xs-2">Firm</label>
+                                <div class="col-xs-6">
+                                        <input type="text" class="form-control" id="firm" aria-describedby="firm-help" value="{{firm}}">
+                                        <span id="firm-help" class="help-block">Post your firm's subreddit name, e.g. "BiasedLawPLLC"</span>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label class="control-label col-xs-2">Update method</label>
+                                <div class="col-xs-10">
+                                        {{#each updateMethods}}
+                                                <div class="radio">
+                                                        <label>
+                                                                <input type="radio" name="update-methods" value="{{value}}" {{checked}}>
+                                                                {{value}} {{description}}
+                                                        </label>
+                                                </div>
+                                        {{/each}}
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label for="recipient" class="control-label col-xs-2">Recipient</label>
+                                <div class="col-xs-6">
+                                        <input type="text" class="form-control" id="recipient" aria-describedby="recipient-help" value="{{recipient}}" {{recipientDisabled}}>
+                                        <span id="recipient-help" class="help-block">If you chose <code>PM</code> above, this should be a username. If you chose <code>Reply</code> then it should be a post's URL.</span>
+                                </div>
+                        </div>
+                        <button class="btn btn-default" type="submit">Save</button>
+                </fieldset>
+        </form>
+</template>
