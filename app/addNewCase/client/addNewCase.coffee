@@ -31,6 +31,10 @@ formatStatuses = (n, m) ->
                 }
         return o
 
+cleanup = (cxt) ->
+        cxt.$("[type='radio']:checked").attr("checked", false)
+        input.value = "" for input in cxt.$("textarea, [type='text']")
+
 ###
 #                         __
 #   ___ _   _____  ____  / /______
@@ -46,6 +50,7 @@ Template.addNewCase.events
 
                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                 cxt.$(".btn-post-to-firm").addClass("hidden")
+                cleanup(cxt)
 
         'click .post-to-firm': (evt, cxt) ->
                 evt.preventDefault()
@@ -60,11 +65,12 @@ Template.addNewCase.events
                         if r.error
                                 return Message.warning(r.error)
                         if e
-                                return Message.erro("Something went wrong")
+                                return Message.error("Something went wrong")
                         else
                                 Message.success("Link posted")
                                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
-                                cxt.$(".btn-post-to-firm").addClass("hidden"))
+                                cxt.$(".btn-post-to-firm").addClass("hidden")
+                                cleanup(cxt))
 
         'submit form': (evt, cxt) ->
                 evt.preventDefault()
@@ -85,6 +91,9 @@ Template.addNewCase.events
                                 if Meteor.user().profile?.settings?.firm?.length > 0
                                         cxt.$("button[type='submit']").attr("disabled", true).addClass("hidden")
                                         cxt.$(".btn-post-to-firm").removeClass("hidden")
+                                else
+                                        cleanup(cxt)
+
                                 Message.success("Case saved"))
 ###
 #     __         __
