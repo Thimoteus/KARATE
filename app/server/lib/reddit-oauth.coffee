@@ -147,13 +147,7 @@ class @Reddit extends @RedditOAuth
                 return @needsCaptchaError if @needsCaptcha()
                 return @_postToApi('/api/submit', data)
 
-        submitCaseLink: (kase, sr) ->
-
-                id = kase.number
-                KCnum = @getKCNum(id)
-                title = KCnum + ", " + kase.role + ": " + @getArticleTitle(id)
-
-                return @postLinkToSr(sr, title, "http://redd.it/#{id}")
+        submitCaseLink: (kase, sr) -> return @postLinkToSr(sr, kase.title, "http://redd.it/#{kase.number}")
 
         sendPM: (recipient, title, msg) ->
 

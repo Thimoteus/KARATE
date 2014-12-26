@@ -1,3 +1,12 @@
+formatTitle = (title) ->
+        replacements =
+                "&amp;": "&"
+
+        for badkey, goodvalue of replacements
+                title = title.replace(badkey, goodvalue)
+
+        return title
+
 Meteor.methods
 
         "submitNewCase": (kase) ->
@@ -7,7 +16,7 @@ Meteor.methods
 
                 try
 
-                        kase.title = reddit.getArticleTitle(kase.number)
+                        kase.title = formatTitle(reddit.getArticleTitle(kase.number))
 
                         Cases.insert
                                 'owner': @userId
@@ -16,26 +25,27 @@ Meteor.methods
                                 'role': kase.role
                                 'status': kase.status
                                 'notes': kase.notes
-                        
+
                         return true
 
                 catch err
 
                         console.log "Error creating case: #{err.message}"
                         console.log err.response
-                        
+
                         return false
 
-        
+
         "postToFirm": (kase) ->
                 check(kase.role, val.isTrialRole)
                 check(kase.status, val.isTrialStatus)
-                
+
                 kase.sr = reddit.getShortLinkSr(kase.number) unless kase.sr
+                kase.title = reddit.getKCNum(kase.number) + ", " + kase.role + ": " + formatTitle(reddit.getArticleTitle(kase.number))
+
                 firm = Meteor.user().profile.settings?.firm
-                
                 return {error: "You need to set a firm."} unless firm?
-                
+
                 res = reddit.submitCaseLink(kase, firm)
 
                 try

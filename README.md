@@ -31,7 +31,7 @@ Improvements:
 
 0.1.2
 
-Impovements:
+Improvements:
 
 1. Added case number and role to links posted to the firm.
 2. Automatically tries to set case flair to links submitted to a user's firm. You will need to log out and log back in to KARATE for this to work.
