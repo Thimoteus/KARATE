@@ -22,8 +22,8 @@ Meteor.subscribe("cases")
         success: (msg) -> Message.msg(msg, "success")
 
 Accounts.ui.config
-        requestPermissions: 
-                reddit: ['read', 'identity', 'submit', 'privatemessages', 'flair']
+        requestPermissions:
+                reddit: ['read', 'identity', 'submit', 'privatemessages', 'flair', 'edit']
 
 Template.magicButton.events
 

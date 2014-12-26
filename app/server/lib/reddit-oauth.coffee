@@ -1,7 +1,7 @@
 class @RedditOAuth
-        
+
         constructor: (@accessToken, @refreshToken, @expiresIn) ->
-               
+
                 @oauth_base_url = "https://oauth.reddit.com"
                 @anon_base_url = "http://www.reddit.com"
                 @userAgent = "Meteor/1.0"
@@ -27,15 +27,15 @@ class @RedditOAuth
 
                         throw e
 
-        
+
         get: (url, options = {}) -> @call("GET", url, options)
-        
+
         post: (url, options = {}) -> @call("POST", url, options)
-        
+
         _refreshAccessToken: (refreshToken) ->
-                        
+
                 config = ServiceConfiguration.configurations.findOne('service': 'reddit')
-                params = 
+                params =
                         "grant_type": "refresh_token"
                         "refresh_token": refreshToken
                 opts =
@@ -43,9 +43,9 @@ class @RedditOAuth
                         auth: "#{config.appId}:#{config.secret}"
 
                 res = Meteor.http.post("https://ssl.reddit.com/api/v1/access_token", opts)
-                
+
                 if res.data and res.data.access_token
-                
+
                         accessToken = res.data.access_token
                         expiresIn = res.data.expires_in
                         o = {}
@@ -55,7 +55,7 @@ class @RedditOAuth
                         @expiresIn = expiresIn
 
                         Meteor.users.update(Meteor.userId(), {$set: o})
-                        
+
                         return true
                 else
                         return false
@@ -72,7 +72,7 @@ class @Reddit extends @RedditOAuth
 
                 url = @oauth_base_url + endpt
                 opts = if (key for key of params).length is 0 then {} else params: params
-                
+
                 return @get(url, opts)
 
         _postToApi: (endpt, data = {}) ->
@@ -90,14 +90,14 @@ class @Reddit extends @RedditOAuth
                         this[id] =
                                 article: @_getApiItem("/r/#{sr}/comments/#{id}.json")
                                 expires: Date.now()+1000*3600
-                
+
                 else if this[id].expires <= Date.now()
 
                         sr = @getShortLinkSr(id) unless sr?
                         this[id] =
                                 article: @_getApiItem("/r/#{sr}/comments/#{id}.json")
                                 expires: Date.now()+1000*3600
-                
+
                 return this[id].article
 
         _getArticleJson: (id) -> @_getArticle(id).data[0].data.children[0].data
@@ -133,6 +133,20 @@ class @Reddit extends @RedditOAuth
                 return @needsCaptchaError if @needsCaptcha()
                 return @_postToApi('/api/submit', data)
 
+        postSelfTextToSr: (sr, title, body) ->
+
+                data =
+                        api_type: 'json'
+                        kind: 'self'
+                        sr: sr
+                        title: title
+                        text: body
+                        extension: 'json'
+                        then: 'comments'
+
+                return @needsCaptchaError if @needsCaptcha()
+                return @_postToApi('/api/submit', data)
+
         submitCaseLink: (kase, sr) ->
 
                 id = kase.number
@@ -148,7 +162,7 @@ class @Reddit extends @RedditOAuth
                         subject: title
                         text: msg
                         to: recipient
-                
+
                 return @needsCaptchaError if @needsCaptcha()
                 return @_postToApi('/api/compose', data)
 
@@ -173,7 +187,7 @@ class @Reddit extends @RedditOAuth
                 sr = @getShortLinkSr(id)
                 data =
                         link: "t3_#{id}"
-                
+
                 return @_postToApi("/r/#{sr}/api/flairselector", data)
 
         setFlairOption: (id, flair = /case/i) ->
@@ -192,3 +206,12 @@ class @Reddit extends @RedditOAuth
                         flair_template_id: flairTemplateId
 
                 return @_postToApi("/r/#{sr}/api/selectflair", data)
+
+        editUserText: (name, text) ->
+
+                data =
+                        api_type: 'json'
+                        text: text
+                        thing_id: name
+
+                return @_postToApi("/api/editusertext", data)

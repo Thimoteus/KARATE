@@ -1,6 +1,10 @@
 # for validations
 @val =
         exists: Match.Where (x) -> x?
+        isProperArray: Match.Where (arr) ->
+                check(arr, Array)
+                arr.length > 0
+
         isProperString: Match.Where (str) ->
                 check(str, String)
                 str.length > 0
@@ -55,6 +59,6 @@ Meteor.methods
 
         # lib
         "magicButton": (args...) ->
-                
+
                 res = reddit.setFlairOption(args[0])
                 console.log res

@@ -1,6 +1,6 @@
 <template name="tools">
         <form role="form" class="form-horizontal" id="tools-username">
-                <legend>User search</legend>
+                <legend><span class="glyphicon glyphicon-user"></span> User search</legend>
                 <fieldset>
                         <div class="form-group">
                                 <label class="control-label col-xs-2">Search</label>
@@ -41,7 +41,7 @@
                 </fieldset>
         </form>
         <form role="form" class="form-horizontal" id="tools-image">
-                <legend>Reverse image search</legend>
+                <legend><span class="glyphicon glyphicon-picture"></span> Reverse image search</legend>
                 <fieldset>
                         <div class="form-group">
                                 <label class="control-label col-xs-2">Search</label>
@@ -74,6 +74,58 @@
                                         </div>
                                 </div>
                         </div>
+                </fieldset>
+        </form>
+        <form id="tools-file-case" class="form-horizontal" role="form">
+                <legend><span class="glyphicon glyphicon-folder-open"></span> File a case in KarmaCourt</legend>
+                <fieldset>
+                        <div class="form-group">
+                                <div class="col-xs-12">
+                                        <div class="form-group row">
+                                                <label for="plaintiff" class="col-xs-2 control-label">Plaintiff</label>
+                                                <div class="col-xs-4">
+                                                        <input type="text" class="form-control" placeholder="THE PEOPLE OF REDDIT" id="plaintiff">
+                                                </div>
+                                                <label for="defendant" class="col-xs-1 control-label">versus</label>
+                                                <div class="col-xs-4">
+                                                        <input type="text" class="form-control" placeholder="OP" id="defendant">
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label class="col-xs-2 control-label">for</label>
+                                <div class="col-xs-6" id="charges">
+                                        {{#each charges}}
+                                                <div class="input-group charges-group">
+                                                        <input type="text" value="{{val}}" class="form-control" placeholder="CHARGE {{num}}">
+                                                        <div class="input-group-btn">
+                                                                <button class="btn btn-{{type}} {{type}} charge">{{sign}}</button>
+                                                        </div>
+                                                </div>
+                                        {{/each}}
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label for="explanation" class="col-xs-2 control-label">Explanation</label>
+                                <div class="col-xs-6">
+                                        <textarea class="form-control" rows="3" id="explanation" placeholder="Provide an outline of what has occurred. Hyperlink any necessary quotations or points. Format as necessary. Refer to exhibits or evidence as you feel is required. One or two pieces often suffices, but more evidence is better."></textarea>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                                <label class="col-xs-2 control-label">Evidence</label>
+                                <div class="col-xs-6" id="evidence">
+                                        {{#each evidence}}
+                                                <div class="input-group evidence-group">
+                                                        <input type="text" placeholder="EXHIBIT {{num}}" class="form-control" value="{{val}}">
+                                                        <div class="input-group-btn">
+                                                                <button class="btn btn-{{type}} {{type}} evidence">{{sign}}</button>
+                                                        </div>
+                                                </div>
+                                        {{/each}}
+                                </div>
+                        </div>
+                        <button class="btn btn-default" type="submit">File</button>
                 </fieldset>
         </form>
 </template>

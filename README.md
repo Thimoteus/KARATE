@@ -1,4 +1,4 @@
-Current version: 0.2.0.1
+Current version: 0.2.1
 
 The **Kar**ma **A**ttorney **T**ool **E**ngine is a tool developed by [/u/Thimoteus](https://www.reddit.com/user/Thimoteus) to help [KarmaCourt](https://www.reddit.com/r/KarmaCourt) attorneys keep track of their cases.
 
@@ -15,6 +15,12 @@ Dependencies:
 9. service-configuration
 
 ######changelog
+0.2.1
+
+Improvements:
+
+1. Added ability to file new cases in KarmaCourt to the "tools" section. This requires logging out and into the application.
+
 0.2.0
 
 Improvements:
