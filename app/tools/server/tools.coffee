@@ -46,7 +46,10 @@ Meteor.methods
                 title = "#{docket.plaintiff} VS #{docket.defendant} FOR #{docket.charges.join(", ")}"
 
                 try
-                        res = reddit.postSelfTextToSr("KarmaCourt", title, caseText("", docket.charges, docket.explanation, docket.evidence))
+                        res = reddit.postSelfTextToSr(
+                                "KarmaCourt",
+                                title,
+                                caseText("", docket.charges, docket.explanation, docket.evidence))
                         name = res.data.json.data.name
                         id = res.data.json.data.id
                         KCnum = reddit.getKCNum(id)
@@ -56,6 +59,7 @@ Meteor.methods
                 try
                         body = caseText(KCnum, docket.charges, docket.explanation, docket.evidence)
                         reddit.editUserText(name, body)
+                        reddit.setFlairOption(id, /attorneys required/i)
                         return true
                 catch e
                         return {error: "Please log out of KARATE and log back in"} if e.response.statusCode is 403
