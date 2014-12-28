@@ -29,6 +29,13 @@ removeItem = (str, evt) ->
         obj.num = alphabet[i] for obj, i in nu
         Session.set(str, nu)
 
+cleanup = (cxt) ->
+        ev = ch = [{num: alphabet[0], type: "success", sign: "+", val: ""}]
+        Session.set("evidence", ev)
+        Session.set("charges", ch)
+        cxt.$("[type='radio']:checked").attr("checked", false)
+        input.value = "" for input in cxt.$("textarea, [type='text']")
+
 Template.tools.events
 
         'submit #tools-username': (evt, cxt) ->
@@ -103,7 +110,8 @@ Template.tools.events
                         else if r.error
                                 return Message.warning(r.error)
                         else
-                                return Message.success("Case filed!"))
+                                Message.success("Case filed!", "http://redd.it/#{r}")
+                                cleanup(cxt))
 
 Template.tools.rendered = ->
 

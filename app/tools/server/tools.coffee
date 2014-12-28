@@ -60,7 +60,7 @@ Meteor.methods
                         body = caseText(KCnum, docket.charges, docket.explanation, docket.evidence)
                         reddit.editUserText(name, body)
                         reddit.setFlairOption(id, /attorneys required/i)
-                        return true
+                        return id
                 catch e
                         return {error: "Please log out of KARATE and log back in"} if e.response.statusCode is 403
                         return {error: "Something went wrong"}

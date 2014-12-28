@@ -5,8 +5,13 @@ Meteor.subscribe("cases")
 
 # lib
 @Message =
-        msg: (msg, type) ->
+        msg: (msg, type, link=false) ->
                 t = if type is "danger" then "Error" else type
+                msg = if link then "<a href='#{link}' target='_blank'> #{msg}</a>" else msg
+                if link
+                        msg = "<a href='#{link}' target='_blank'>
+                                <span class='glyphicon glyphicon-link'></span> #{msg}
+                                </a>"
                 statusMsg = """
                         <div class='alert alert-#{type} alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert'>
@@ -16,10 +21,10 @@ Meteor.subscribe("cases")
                                 <strong>#{t[0].toUpperCase()+t[1..]}:</strong> #{msg}
                         </div>"""
                 $("#statusUpdates").prepend(statusMsg)
-        warning: (msg) -> Message.msg(msg, "warning")
-        error: (msg) -> Message.msg(msg, "danger")
-        info: (msg) -> Message.msg(msg, "info")
-        success: (msg) -> Message.msg(msg, "success")
+        warning: (msg, link=false) -> Message.msg(msg, "warning", link)
+        error: (msg, link=false) -> Message.msg(msg, "danger", link)
+        info: (msg, link=false) -> Message.msg(msg, "info", link)
+        success: (msg, link=false) -> Message.msg(msg, "success", link)
 
 Accounts.ui.config
         requestPermissions:

@@ -60,5 +60,6 @@ Meteor.methods
         # lib
         "magicButton": (args...) ->
 
-                res = reddit.setFlairOption(args[0])
+                # res = reddit.setFlairOption(args[0])
+                res = reddit._getFlairOptionsForPost(args[0]).data.choices
                 console.log res

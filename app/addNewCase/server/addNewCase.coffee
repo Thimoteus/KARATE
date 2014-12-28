@@ -41,7 +41,9 @@ Meteor.methods
                 check(kase.status, val.isTrialStatus)
 
                 kase.sr = reddit.getShortLinkSr(kase.number) unless kase.sr
-                kase.title = reddit.getKCNum(kase.number) + ", " + kase.role + ": " + formatTitle(reddit.getArticleTitle(kase.number))
+                kase.title = reddit.getKCNum(kase.number) +
+                        ", #{kase.role}: " +
+                        formatTitle(reddit.getArticleTitle(kase.number))
 
                 firm = Meteor.user().profile.settings?.firm
                 return {error: "You need to set a firm."} unless firm?

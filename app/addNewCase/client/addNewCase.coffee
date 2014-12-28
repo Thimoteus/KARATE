@@ -67,7 +67,7 @@ Template.addNewCase.events
                         if e
                                 return Message.error("Something went wrong")
                         else
-                                Message.success("Link posted")
+                                Message.success("Link posted", "http://redd.it/#{r.data.json.data.id}")
                                 cxt.$("button[type='submit']").attr("disabled", false).removeClass("hidden")
                                 cxt.$(".btn-post-to-firm").addClass("hidden")
                                 cleanup(cxt))
