@@ -147,7 +147,7 @@ Template.statistics.helpers
 
         totalCases: -> Cases.find().count()
 
-        incompleted: -> Cases.find(status: {$in: statuses[0..1]}).count()
+        incomplete: -> Cases.find(status: {$in: statuses[0..1]}).count()
 
         wins: ->
                 Cases.find(role: "prosecution", status: {$in: wins.prosecution}).count() +

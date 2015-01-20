@@ -1,5 +1,5 @@
 @roles = ["judge","jury","prosecution","defense","bailiff","executioner","reporter"]
-@statuses = ["pre-trial","in-session","guilty","not-guilty","dismissed","mistrial", "plea-bargain"]
+@statuses = ["pre-trial","in-session","guilty","not-guilty","dismissed","mistrial", "plea-bargain", "zombie"]
 
 @getArticleSrAndId = (url) ->
         # https://www.reddit.com/r/KarmaCourt/comments/2oblji/the_people_of_rfunny_vs_umadfotze_for/

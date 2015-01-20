@@ -112,7 +112,7 @@ Template.addNewCase.helpers
 
         verdictStatuses: -> formatStatuses(2,3)
 
-        ncStatuses: -> formatStatuses(4,6)
+        ncStatuses: -> formatStatuses(4,7)
 
 ###
 #                         __                   __
