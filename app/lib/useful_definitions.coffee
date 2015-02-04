@@ -1,4 +1,4 @@
-@roles = ["judge","jury","prosecution","defense","bailiff","executioner","reporter"]
+@roles = ["judge","jury","prosecution","defense","bailiff","executioner","reporter","plaintiff"]
 @statuses = ["pre-trial","in-session","guilty","not-guilty","dismissed","mistrial", "plea-bargain", "zombie"]
 
 @getArticleSrAndId = (url) ->
