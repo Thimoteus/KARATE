@@ -1,3 +1,4 @@
 .meteor
+.build
 settings.json
 localsettings.json
